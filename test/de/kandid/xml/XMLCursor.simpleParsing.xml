@@ -1,0 +1,13 @@
+<?xml version="1.0" ?>
+<root>
+	<outer outerNr="0">
+		<inner nr="0" attr0="attr" attr2="attr2" attr1="attr1"/>
+		<inner nr="1" attr0="attr" attr2="attr2" attr1="attr1"/>
+		<inner nr="2" attr0="attr" attr2="attr2" attr1="attr1"/>
+	</outer>
+	<outer outerNr="1">
+		<inner nr="0" attr0="attr" attr2="attr2" attr1="attr1"/>
+		<inner nr="1" attr0="attr" attr2="attr2" attr1="attr1"/>
+		<inner nr="2" attr0="attr" attr2="attr2" attr1="attr1"/>
+	</outer>
+</root>

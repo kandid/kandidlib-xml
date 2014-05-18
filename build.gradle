@@ -1,0 +1,79 @@
+apply plugin: 'java'
+apply plugin: 'idea'
+apply plugin: 'eclipse'
+apply plugin: 'maven'
+apply plugin: 'signing'
+
+sourceCompatibility = 1.7
+version = '0.1.0'
+group = 'de.kandid'
+def theName = 'kandidlib-xml'
+def theDescription = 'Turns StAX parsing from pain to pleasure'
+
+buildDir = hasProperty('build.dir.root') ? file(getProperty('build.dir.root') + '/' + project.name) : buildDir
+
+eclipse {classpath {defaultOutputDir = new File(buildDir, 'eclipse/classes')}}
+
+repositories {
+	 mavenLocal()
+    mavenCentral()
+}
+
+sourceSets {
+	main {java {srcDir 'src'}}
+	test {java {srcDir 'test'} resources {srcDir 'test'}}
+}
+
+dependencies {
+	testCompile group: 'junit', name: 'junit', version: '4.11'
+}
+
+jar {baseName = theName}
+task sourcesJar(type: Jar, dependsOn: classes) {
+	baseName = theName
+	classifier = 'sources'
+	from sourceSets.main.allSource
+}
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+	baseName = theName
+	classifier = 'javadoc'
+	from new File(buildDir, 'docs/javadoc')
+}
+
+if (hasProperty('signing.keyId'))
+	signing {sign configurations.archives}
+
+if (hasProperty('sonatypeUsername'))
+	uploadArchives {	repositories { mavenDeployer {
+		if (!hasProperty('sonatypeUsername'))
+			return
+		beforeDeployment {deployment -> signing.signPom(deployment)}
+		repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
+			authentication(userName: sonatypeUsername, password: sonatypePassword)
+		}
+		pom.project {
+			name theName
+			packaging 'jar'
+			description theDescription
+			url 'https://github.com/kandid/' + theName
+			scm {
+				def gitUrl = 'scm:git@github.com:kandid/' + theName
+				url gitUrl; connection gitUrl; developerConnection gitUrl;
+			}
+			licenses { license {
+					 name 'The Apache Software License, Version 2.0'
+					 url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+					 distribution 'repo'
+			}}
+			developers {
+				developer {id 'kandid'; name 'Dominikus Diesch';}
+			}
+		}
+	}}}
+
+artifacts {
+	archives jar
+	archives sourcesJar
+	archives javadocJar
+}

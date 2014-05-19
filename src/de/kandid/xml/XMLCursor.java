@@ -37,7 +37,15 @@ import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
 /**
- * XMLCursor represents an XML element
+ * XMLCursor represents an XML element and is used to iterate through its child elements.
+ * Iterating is performed by the {@link #all()}, {@link #any()}, {@link #multiple(String)},
+ * {@link #optional(String)} and {@link #required(String)} methods.
+ * Each {@code XMLCursor} object remembers all of its attributes even while iterating
+ * through child elements. However, the object will be reused if a sibling is read from
+ * the stream and will therefore be useless for the previous element.<p/>
+ * 
+ * The test case and the <a href="https://github.com/kandid/kandidlib-xml">github</a>
+ * page provide some examples how to use {@code XMLCursor}.
  */
 public class XMLCursor implements AutoCloseable {
 
